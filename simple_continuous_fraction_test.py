@@ -1,18 +1,7 @@
 import math
 import unittest
 
-
-def split_integer_and_decimal_parts(value):
-    return math.floor(value), value - math.floor(value)
-
-
-def simple_continuous_fraction(value):
-    integer, decimal = split_integer_and_decimal_parts(value)
-    if math.isclose(decimal, 0.0):
-        return str(integer)
-    else:
-        denominator = round(1 / decimal)
-        return '%d + \\frac{1}{%d}' % (integer, denominator)
+from simple_continuous_fraction import simple_continuous_fraction
 
 
 class SimpleContinuousFractionTestCase(unittest.TestCase):
@@ -30,8 +19,13 @@ class SimpleContinuousFractionTestCase(unittest.TestCase):
         self.assertEqual('0 + \\frac{1}{2}', simple_continuous_fraction(1 + 1 / -2))
         self.assertEqual('-2 + \\frac{1}{2}', simple_continuous_fraction(-1 + 1 / -2))
 
-    # def test_depth_2(self):
-    #     self.assertEqual('1 + \\dfrac{1}{1 + \\dfrac{1}{2}}', simple_continuous_fraction(1 + 1 / (1 + 1/2)))
+    def test_depth_2(self):
+        self.assertEqual('1 + \\frac{1}{1 + \\frac{1}{2}}', simple_continuous_fraction(1 + 1 / (1 + 1 / 2)))
+
+    def test_limit_depth(self):
+        golden_ratio = (math.sqrt(5) + 1) / 2
+        self.assertEqual('1 + \\frac{1}{1 + \\frac{1}{1 + \\frac{1}{1}}}',
+                         simple_continuous_fraction(golden_ratio, depth=4))
 
 
 if __name__ == '__main__':
