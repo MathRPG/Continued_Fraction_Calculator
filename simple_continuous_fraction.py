@@ -16,6 +16,6 @@ def simple_continuous_fraction(value, depth=10):
     result = str(integer)
 
     if not math.isclose(decimal, 0) and depth > 1:
-        result += ' + \\frac{1}{%s}' % simple_continuous_fraction(1 / decimal, depth - 1)
+        result += ' + \\dfrac{1}{%s}' % simple_continuous_fraction(1 / decimal, depth - 1)
 
     return result
