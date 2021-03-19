@@ -71,8 +71,12 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
     def get_cf_latex_from_value(value, depth):
         return f'${simple_continuous_fraction(value, depth)}$'
 
+    # Source: https://stackoverflow.com/questions/32035251/displaying-latex-in-pyqt-pyside-qtablewidget
     @staticmethod
     def get_pixmap_from_latex(latex, font_size=20):
+
+        mpl.pyplot.close('all')
+
         fig = mpl.pyplot.figure()
         fig.patch.set_facecolor('none')
         fig.set_canvas(FigureCanvasAgg(fig))
