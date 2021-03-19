@@ -39,11 +39,11 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         self.form_depth_spin_box.setMinimum(1)
         self.form_depth_spin_box.setMaximum(40)
 
-        self.form_submit_push_button.clicked.connect(self.submit_form)
+        self.form_submit_push_button.clicked.connect(self.interpret_form)
 
         self.show()
 
-    def submit_form(self):
+    def interpret_form(self):
         expression = self.form_expression_line_edit.text()
         depth = self.form_depth_spin_box.value()
 
@@ -57,7 +57,7 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         latex = None
 
         try:
-            latex = self.get_cf_latex_from_value(evaluation, depth)
+            latex = get_cf_latex_from_value(evaluation, depth)
         except Exception as e:
             self.form_depth_spin_box.setValue(15)
             QtWidgets.QMessageBox.critical(self, 'Error', 'Calculation Failed')
@@ -67,7 +67,7 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         pixmap = None
 
         try:
-            pixmap = self.get_pixmap_from_latex(latex, font_size=12)
+            pixmap = get_pixmap_from_latex(latex, font_size=12)
         except Exception as e:
             QtWidgets.QMessageBox.critical(self, 'Error', 'Rendering Failed')
             print(e)
@@ -76,42 +76,41 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         self.result_render_label.setPixmap(pixmap)
         self.result_render_label.show()
 
-    @staticmethod
-    def get_cf_latex_from_value(value, depth):
-        return f'${simple_continuous_fraction(value, depth)}$'
 
-    # Source: https://stackoverflow.com/questions/32035251/displaying-latex-in-pyqt-pyside-qtablewidget
-    @staticmethod
-    def get_pixmap_from_latex(latex, font_size=20):
+def get_cf_latex_from_value(value, depth):
+    return f'${simple_continuous_fraction(value, depth)}$'
 
-        mpl.pyplot.close('all')
 
-        fig = mpl.pyplot.figure()
-        fig.patch.set_facecolor('none')
-        fig.set_canvas(FigureCanvasAgg(fig))
-        renderer = fig.canvas.get_renderer()
+# Source: https://stackoverflow.com/questions/32035251/displaying-latex-in-pyqt-pyside-qtablewidget
+def get_pixmap_from_latex(latex, font_size=20):
+    mpl.pyplot.close('all')
 
-        ax = fig.add_axes([0, 0, 1, 1])
-        ax.axis('off')
-        # ax.patch.set_facecolor('none')
-        t = ax.text(0, 0, latex, ha='left', va='bottom', fontsize=font_size)
+    fig = mpl.pyplot.figure()
+    fig.patch.set_facecolor('none')
+    fig.set_canvas(FigureCanvasAgg(fig))
+    renderer = fig.canvas.get_renderer()
 
-        fig_width, fig_height = fig.get_size_inches()
-        fig_bbox = fig.get_window_extent(renderer)
-        text_bbox = t.get_window_extent(renderer)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.axis('off')
+    # ax.patch.set_facecolor('none')
+    t = ax.text(0, 0, latex, ha='left', va='bottom', fontsize=font_size)
 
-        tight_fig_width = text_bbox.width * fig_width / fig_bbox.width
-        tight_fig_height = text_bbox.height * fig_height / fig_bbox.height
+    fig_width, fig_height = fig.get_size_inches()
+    fig_bbox = fig.get_window_extent(renderer)
+    text_bbox = t.get_window_extent(renderer)
 
-        fig.set_size_inches(tight_fig_width, tight_fig_height)
+    tight_fig_width = text_bbox.width * fig_width / fig_bbox.width
+    tight_fig_height = text_bbox.height * fig_height / fig_bbox.height
 
-        buf, size = fig.canvas.print_to_buffer()
+    fig.set_size_inches(tight_fig_width, tight_fig_height)
 
-        q_image = QtGui.QImage.rgbSwapped(QtGui.QImage(buf, size[0], size[1], QtGui.QImage.Format_ARGB32))
+    buf, size = fig.canvas.print_to_buffer()
 
-        q_pixmap = QtGui.QPixmap(q_image)
+    q_image = QtGui.QImage.rgbSwapped(QtGui.QImage(buf, size[0], size[1], QtGui.QImage.Format_ARGB32))
 
-        return q_pixmap
+    q_pixmap = QtGui.QPixmap(q_image)
+
+    return q_pixmap
 
 
 if __name__ == '__main__':
