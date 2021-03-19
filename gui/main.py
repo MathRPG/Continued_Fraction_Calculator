@@ -1,11 +1,22 @@
+import sys
+
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets as qtw, QtGui
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
+from gui.simple_continued_fraction_calculator_ui import Ui_SimpleContinuedFractionCalculatorForm
 from test import Ui_main_window
 from simple_continuous_fraction import simple_continuous_fraction
 
+class SimpleContinuedFractionCalculatorWindow(qtw.QWidget, Ui_SimpleContinuedFractionCalculatorForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setupUi(self)
+
+
+    pass
 
 class MainWindowUI(Ui_main_window):
 
@@ -70,22 +81,29 @@ def mathTex_to_QPixmap(mathTex, font_size):
 
 
 if __name__ == '__main__':
-    import sys
 
-    print('hey')
-    app = QtWidgets.QApplication(sys.argv)
-    print('hey')
+    app = qtw.QApplication([])
 
-    main_window = QtWidgets.QMainWindow()
-    print('hey')
-
-    ui = MainWindowUI()
-    print('hey')
-
-    ui.setupUi(main_window)
-    print('hey')
-
-    main_window.show()
-    print('hey')
+    widget = SimpleContinuedFractionCalculatorWindow()
+    widget.show()
 
     sys.exit(app.exec_())
+
+
+    # print('hey')
+    # app = qtw.QApplication(sys.argv)
+    # print('hey')
+    #
+    # main_window = qtw.QMainWindow()
+    # print('hey')
+    #
+    # ui = MainWindowUI()
+    # print('hey')
+    #
+    # ui.setupUi(main_window)
+    # print('hey')
+    #
+    # main_window.show()
+    # print('hey')
+    #
+    # sys.exit(app.exec_())
