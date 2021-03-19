@@ -40,8 +40,8 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
 
         try:
             evaluation = eval(expression, self.EVAL_SYMBOLS)
-        except (SyntaxError, NameError):
-            self.form_expression_line_edit.setText('')
+        except (SyntaxError, NameError, ValueError):
+            self.form_expression_line_edit.clear()
             QtWidgets.QMessageBox.critical(self, 'Error', 'Invalid Expression')
             return
 
