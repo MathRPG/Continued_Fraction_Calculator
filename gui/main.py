@@ -3,11 +3,18 @@ import sys
 
 import matplotlib as mpl
 import matplotlib.pyplot
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from gui.simple_continued_fraction_calculator_ui import Ui_SimpleContinuedFractionCalculatorForm
 from simple_continuous_fraction import simple_continuous_fraction
+
+
+class SimpleContinuedFractionCalculatorRequestForm:
+
+    def __init__(self, expression, depth):
+        self.expression = expression
+        self.depth = depth
 
 
 class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContinuedFractionCalculatorForm):
@@ -22,6 +29,8 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         'sin': math.sin,
         'cos': math.cos,
     }
+
+    submitted = QtCore.pyqtSignal(SimpleContinuedFractionCalculatorRequestForm)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,7 +115,6 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
 
 
 if __name__ == '__main__':
-
     sys.setrecursionlimit(10000)
 
     app = QtWidgets.QApplication(sys.argv)
