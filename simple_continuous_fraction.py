@@ -19,3 +19,7 @@ def simple_continuous_fraction(value, depth=10):
         result += ' + \\dfrac{1}{%s}' % simple_continuous_fraction(1 / decimal, depth - 1)
 
     return result
+
+
+def get_cf_latex_from_value(value, depth):
+    return f'${simple_continuous_fraction(value, depth)}$'
