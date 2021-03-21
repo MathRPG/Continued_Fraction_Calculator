@@ -37,9 +37,20 @@ class MainApp(QApplication):
             self.main_widget.process_exception(e)
 
     def get_fraction_pixmap_from_expression_with_depth(self, expression, depth):
-        expression_evaluated = eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
-        fraction_latex = get_simple_continued_fraction_latex_from_value(expression_evaluated, depth=depth)
+        value = self.evaluate_expression(expression)
+        fraction_latex = get_simple_continued_fraction_latex_from_value(value, depth=depth)
         return get_pixmap_from_latex(fraction_latex, font_size=12)
+
+    def evaluate_expression(self, expression):
+        # TODO: Better error names/strings
+        try:
+            return eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
+        except NameError:
+            raise NameError("Unrecognized Names")
+        except SyntaxError:
+            raise SyntaxError("Invalid Syntax")
+        except Exception as e:
+            raise e
 
 
 if __name__ == '__main__':
