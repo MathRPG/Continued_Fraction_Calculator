@@ -47,15 +47,21 @@ class RefactoredMainApp(QtWidgets.QApplication):
 class RefactoredSimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContinuedFractionCalculatorForm):
     submitted = QtCore.pyqtSignal(str, int)
 
+    DEFAULT_DEPTH_SPIN_BOX_MINIMUM = 1
+    DEFAULT_DEPTH_SPIN_BOX_MAXIMUM = 40
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setupUi(self)
 
-        self.form_depth_spin_box.setMinimum(1)
-        self.form_depth_spin_box.setMaximum(40)
+        self.set_spin_box_bounds(self.DEFAULT_DEPTH_SPIN_BOX_MINIMUM, self.DEFAULT_DEPTH_SPIN_BOX_MAXIMUM)
 
         self.form_expression_line_edit.returnPressed.connect(self.submit_input)
         self.form_submit_push_button.clicked.connect(self.submit_input)
+
+    def set_spin_box_bounds(self, minimum, maximum):
+        self.form_depth_spin_box.setMinimum(minimum)
+        self.form_depth_spin_box.setMaximum(maximum)
 
     def submit_input(self):
         expression = self.form_expression_line_edit.text()
