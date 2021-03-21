@@ -10,27 +10,42 @@ from gui.simple_continued_fraction_calculator_ui import Ui_SimpleContinuedFracti
 from simple_continuous_fraction import get_cf_latex_from_value
 
 
-class SimpleContinuedFractionCalculatorRequestForm:
+class RefactoredMainApp(QtWidgets.QApplication):
+    """Docstring"""  # TODO: MainApp Docstring
 
-    def __init__(self, expression, depth):
-        self.expression = expression
-        self.depth = depth
-
-
-class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContinuedFractionCalculatorForm):
-    EVAL_SYMBOLS = {
-        # VARIABLES
+    EVALUATION_SYMBOL_LIST = {
         'pi': math.pi,
         'e': math.e,
         'phi': (1 + math.sqrt(5)) / 2,
-
-        # FUNCTIONS
         'sqrt': math.sqrt,
         'sin': math.sin,
         'cos': math.cos,
     }
 
-    submitted = QtCore.pyqtSignal(SimpleContinuedFractionCalculatorRequestForm)
+    def __init__(self, argv):
+        super().__init__(argv)
+        self.main_widget = RefactoredSimpleContinuedFractionCalculatorWindow()
+        self.main_widget.submitted.connect(self.process_form_inputs)
+
+    def exec_(self) -> int:
+        self.main_widget.show()
+        return super().exec_()
+
+    def process_form_inputs(self, expression, depth):
+        try:
+            pixmap = self.get_fraction_pixmap_from_expression_with_depth(expression, depth)
+            self.main_widget.display_fraction(pixmap)
+        except Exception as e:
+            self.main_widget.process_exception(e)
+
+    def get_fraction_pixmap_from_expression_with_depth(self, expression, depth):
+        expression_evaluated = eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
+        fraction_latex = get_cf_latex_from_value(expression_evaluated, depth=depth)
+        return get_pixmap_from_latex(fraction_latex)
+
+
+class RefactoredSimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContinuedFractionCalculatorForm):
+    submitted = QtCore.pyqtSignal(str, int)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,47 +54,22 @@ class SimpleContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_SimpleContin
         self.form_depth_spin_box.setMinimum(1)
         self.form_depth_spin_box.setMaximum(40)
 
-        self.form_submit_push_button.clicked.connect(self.interpret_form_external)
+        self.form_expression_line_edit.returnPressed.connect(self.submit_input)
+        self.form_submit_push_button.clicked.connect(self.submit_input)
 
-        self.show()
-
-    def interpret_form_external(self):
+    def submit_input(self):
         expression = self.form_expression_line_edit.text()
         depth = self.form_depth_spin_box.value()
+        self.submitted.emit(expression, depth)
 
-        evaluation = self.parse_expression(expression)
-
-        if evaluation is None:
-            return
-
-        latex = self.get_latex(evaluation, depth)
-
-        if latex is None:
-            return
-
-        try:
-            pixmap = get_pixmap_from_latex(latex, font_size=12)
-        except (Exception, RuntimeError):
-            QtWidgets.QMessageBox.critical(self, 'Error', 'Rendering Failed')
-            return
-
+    @QtCore.pyqtSlot(QtGui.QPixmap)
+    def display_fraction(self, pixmap):
         self.result_render_label.setPixmap(pixmap)
         self.result_render_label.show()
 
-    def parse_expression(self, expression):
-        try:
-            return eval(expression, self.EVAL_SYMBOLS)
-        except (SyntaxError, NameError, ValueError):
-            self.form_expression_line_edit.clear()
-            QtWidgets.QMessageBox.critical(self, 'Error', 'Invalid Expression')
-            return None
-
-    def get_latex(self, value, depth):
-        try:
-            return get_cf_latex_from_value(value, depth)
-        except (Exception, RuntimeError):
-            QtWidgets.QMessageBox.critical(self, 'Error', 'Calculation Failed')
-            return None
+    @QtCore.pyqtSlot(Exception)
+    def process_exception(self, exception):
+        QtWidgets.QMessageBox.critical(self, str(type(exception)), str(exception))
 
 
 # Source: https://stackoverflow.com/questions/32035251/displaying-latex-in-pyqt-pyside-qtablewidget
@@ -116,6 +106,56 @@ def get_pixmap_from_latex(latex, font_size=20):
 if __name__ == '__main__':
     sys.setrecursionlimit(5000)  # TODO: What
 
-    app = QtWidgets.QApplication(sys.argv)
-    widget = SimpleContinuedFractionCalculatorWindow()
+    app = RefactoredMainApp(sys.argv)
     sys.exit(app.exec_())
+
+# Alternative latex rendering:
+# https://gist.github.com/gmarull/dcc8218385014559c1ca46047457c364
+# import sys
+# from PyQt5.QtWidgets import QApplication
+# from PyQt5.QtSvg import QSvgWidget
+#
+# from io import BytesIO
+# import matplotlib.pyplot as plt
+#
+#
+# # matplotlib: force computer modern font set
+# plt.rc('mathtext', fontset='cm')
+#
+#
+# def tex2svg(formula, fontsize=12, dpi=300):
+#     """Render TeX formula to SVG.
+#     Args:
+#         formula (str): TeX formula.
+#         fontsize (int, optional): Font size.
+#         dpi (int, optional): DPI.
+#     Returns:
+#         str: SVG render.
+#     """
+#
+#     fig = plt.figure(figsize=(0.01, 0.01))
+#     fig.text(0, 0, r'${}$'.format(formula), fontsize=fontsize)
+#
+#     output = BytesIO()
+#     fig.savefig(output, dpi=dpi, transparent=True, format='svg',
+#                 bbox_inches='tight', pad_inches=0.0, frameon=False)
+#     plt.close(fig)
+#
+#     output.seek(0)
+#     return output.read()
+#
+#
+# def main():
+#     FORMULA = r'\int_{-\infty}^\infty e^{-x^2}\,dx = \sqrt{\pi}'
+#
+#     app = QApplication(sys.argv)
+#
+#     svg = QSvgWidget()
+#     svg.load(tex2svg(FORMULA))
+#     svg.show()
+#
+#     sys.exit(app.exec_())
+#
+#
+# if __name__ == '__main__':
+#     main()
