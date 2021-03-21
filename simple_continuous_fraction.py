@@ -21,5 +21,5 @@ def simple_continuous_fraction(value, depth=10):
     return result
 
 
-def get_cf_latex_from_value(value, depth):
+def get_simple_continued_fraction_latex_from_value(value, depth):
     return f'${simple_continuous_fraction(value, depth)}$'
