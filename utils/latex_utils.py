@@ -1,11 +1,16 @@
+import sys
+from io import BytesIO
+
 import matplotlib as mpl
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 from PyQt5 import QtGui as QtG
+from PyQt5.QtSvg import QSvgWidget
+from PyQt5.QtWidgets import QApplication
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 # Source: https://stackoverflow.com/questions/32035251/displaying-latex-in-pyqt-pyside-qtablewidget
-def get_pixmap_from_latex(latex, font_size=20):
+def latex_to_pixmap(latex, font_size=20):
     mpl.pyplot.close('all')  # TODO: This is dumb
 
     fig = mpl.pyplot.figure()
@@ -33,6 +38,7 @@ def get_pixmap_from_latex(latex, font_size=20):
     q_pixmap = QtG.QPixmap(q_image)
 
     return q_pixmap
+
 
 # Alternative latex rendering (I think SVG):
 # https://gist.github.com/gmarull/dcc8218385014559c1ca46047457c364
@@ -84,3 +90,25 @@ def get_pixmap_from_latex(latex, font_size=20):
 #
 # if __name__ == '__main__':
 #     main()
+
+def latex_to_svg(latex, font_size=12, dpi=300):
+    fig = plt.figure(figsize=(0.01, 0.01))
+    fig.text(0, 0, latex, fontsize=font_size)
+
+    output_file = BytesIO()
+
+    fig.savefig(output_file, dpi=dpi, transparent=True, format='svg', bbox_inches='tight', pad_inches=0.0)
+    plt.close(fig)
+
+    output_file.seek(0)
+    return output_file.read()
+
+
+if __name__ == '__main__':
+    plt.rc('mathtext', fontset='cm')
+    latex = r'$1 + \dfrac{1}{1 + \dfrac{1}{3}}$'
+    app = QApplication(sys.argv)
+    svg = QSvgWidget()
+    svg.load(latex_to_svg(latex))
+    svg.show()
+    sys.exit(app.exec_())

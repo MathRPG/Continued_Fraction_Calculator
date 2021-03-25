@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication
 
 from gui.simple_continued_fraction_calculator_window import SimpleContinuedFractionCalculatorWindow
 from simple_continuous_fraction import get_simple_continued_fraction_latex_from_value
-from utils.pixmap_from_latex import get_pixmap_from_latex
+from utils.latex_utils import latex_to_pixmap
 
 
 class MainApp(QApplication):
@@ -44,7 +44,7 @@ class MainApp(QApplication):
     def get_fraction_pixmap_from_expression_with_depth(self, expression, depth):
         value = self.evaluate_expression(expression)
         fraction_latex = get_simple_continued_fraction_latex_from_value(value, depth=depth)
-        return get_pixmap_from_latex(fraction_latex, font_size=12)
+        return latex_to_pixmap(fraction_latex, font_size=12)
 
     def evaluate_expression(self, expression):
         # TODO: Better error names/strings
