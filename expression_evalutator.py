@@ -3,7 +3,7 @@ from decimal import Decimal
 
 
 class ExpressionEvaluator:
-    __EVALUATION_SYMBOL_LIST = {
+    DEFAULT_SYMBOL_LIST = {
         'pi': Decimal(
             '3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679'),
         'e': Decimal(
@@ -15,6 +15,8 @@ class ExpressionEvaluator:
         'Decimal': Decimal,
     }
 
-    @staticmethod
-    def evaluate_expression(expression):
-        return eval(expression, {}, ExpressionEvaluator.__EVALUATION_SYMBOL_LIST)
+    def __init__(self, symbol_list=None):
+        self.symbol_dict = symbol_list or ExpressionEvaluator.DEFAULT_SYMBOL_LIST
+
+    def eval_(self, expr):
+        return eval(expr, {}, self.symbol_dict)

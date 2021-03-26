@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ExpressionEvaluationConfigurationWindow</class>
- <widget class="QWidget" name="ExpressionEvaluationConfigurationWindow">
+ <class>SymbolConfigurationWindow</class>
+ <widget class="QWidget" name="SymbolConfigurationWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,19 +11,25 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string notr="true">Configure Expression Evaluation</string>
+   <string notr="true">Configure Symbols</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableWidget" name="token_table_widget">
+    <widget class="QTableWidget" name="symbol_table_widget">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
      <column>
       <property name="text">
-       <string>Token</string>
+       <string>Symbol</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Expression</string>
+       <string>Value</string>
       </property>
      </column>
     </widget>
