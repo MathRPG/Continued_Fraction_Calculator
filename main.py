@@ -6,7 +6,7 @@ from decimal import Decimal
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from continued_fraction.simple_continued_fraction import get_simple_continued_fraction_latex_from_value
+from continued_fraction.continued_fraction_tests import ContinuedFraction
 from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
 from gui.continued_fraction_calculator_window import ContinuedFractionCalculatorWindow
 from utils.latex_utils import latex_to_pixmap
@@ -46,7 +46,7 @@ class MainApp(QApplication):
 
     def form_to_result_pixmap(self, form):
         value = self.evaluate_expression(form.expression)
-        fraction_latex = get_simple_continued_fraction_latex_from_value(value, depth=form.depth)
+        fraction_latex = ContinuedFraction(value, max_depth=form.depth).to_latex()
         return latex_to_pixmap(fraction_latex, font_size=12)
 
     def evaluate_expression(self, expression):

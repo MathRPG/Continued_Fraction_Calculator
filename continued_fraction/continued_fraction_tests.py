@@ -34,7 +34,7 @@ class ContinuedFraction:
         for a in self._as[-2::-1]:
             latex = r'%d + \dfrac{1}{%s}' % (a, latex)
 
-        return latex
+        return f'${latex}$'
 
 
 class ContinuedFractionTestCase(unittest.TestCase):
