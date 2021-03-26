@@ -6,9 +6,9 @@ from decimal import Decimal
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from continued_fraction_calculator_form import ContinuedFractionCalculatorForm
+from continued_fraction.simple_continued_fraction import get_simple_continued_fraction_latex_from_value
+from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
 from gui.continued_fraction_calculator_window import ContinuedFractionCalculatorWindow
-from simple_continuous_fraction import get_simple_continued_fraction_latex_from_value
 from utils.latex_utils import latex_to_pixmap
 
 
@@ -36,8 +36,8 @@ class MainApp(QApplication):
         self.main_window.show()
         return super().exec_()
 
-    @QtCore.pyqtSlot(ContinuedFractionCalculatorForm)
-    def process_form(self, form: ContinuedFractionCalculatorForm):
+    @QtCore.pyqtSlot(ContinuedFractionCalculatorRequestForm)
+    def process_form(self, form: ContinuedFractionCalculatorRequestForm):
         try:
             result_pixmap = self.form_to_result_pixmap(form)
             self.main_window.display_result_pixmap(result_pixmap)

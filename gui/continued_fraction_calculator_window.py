@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-from continued_fraction_calculator_form import ContinuedFractionCalculatorForm
+from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
 from gui.ui_continued_fraction_calculator_main_window import Ui_ContinuedFractionCalculatorMainWindow
 
 
 class ContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_ContinuedFractionCalculatorMainWindow):
-    submitted = QtCore.pyqtSignal(ContinuedFractionCalculatorForm)
+    submitted = QtCore.pyqtSignal(ContinuedFractionCalculatorRequestForm)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,7 +16,7 @@ class ContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_ContinuedFractionC
     def submit_input(self):
         expression = self.expression_line_edit.text()
         depth = self.depth_slider.value()
-        self.submitted.emit(ContinuedFractionCalculatorForm(expression, depth))
+        self.submitted.emit(ContinuedFractionCalculatorRequestForm(expression, depth))
 
     @QtCore.pyqtSlot(QtGui.QPixmap)
     def display_result_pixmap(self, pixmap):

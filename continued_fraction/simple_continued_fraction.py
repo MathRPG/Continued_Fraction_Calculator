@@ -10,16 +10,16 @@ def split_integer_and_decimal_parts(value):
     return integer_part, value - integer_part
 
 
-def simple_continuous_fraction(value, depth=10):
+def simple_continued_fraction(value, depth=10):
     # TODO: specify that output is in latex; maybe make array return later?
     integer, decimal = split_integer_and_decimal_parts(value)
     result = str(integer)
 
     if not math.isclose(decimal, 0) and depth > 1:
-        result += ' + \\dfrac{1}{%s}' % simple_continuous_fraction(1 / decimal, depth - 1)
+        result += ' + \\dfrac{1}{%s}' % simple_continued_fraction(1 / decimal, depth - 1)
 
     return result
 
 
 def get_simple_continued_fraction_latex_from_value(value, depth):
-    return f'${simple_continuous_fraction(value, depth)}$'
+    return f'${simple_continued_fraction(value, depth)}$'
