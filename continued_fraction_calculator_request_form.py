@@ -5,3 +5,4 @@ from dataclasses import dataclass
 class ContinuedFractionCalculatorRequestForm:
     expression: str
     depth: int
+    numerators: iter

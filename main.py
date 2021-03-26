@@ -6,7 +6,7 @@ from decimal import Decimal
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from continued_fraction.continued_fraction_tests import ContinuedFraction
+from continued_fraction.continued_fraction import ContinuedFraction
 from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
 from gui.continued_fraction_calculator_window import ContinuedFractionCalculatorWindow
 from utils.latex_utils import latex_to_pixmap
@@ -46,8 +46,8 @@ class MainApp(QApplication):
 
     def form_to_result_pixmap(self, form):
         value = self.evaluate_expression(form.expression)
-        fraction_latex = ContinuedFraction(value, max_depth=form.depth).to_latex()
-        return latex_to_pixmap(fraction_latex, font_size=12)
+        fraction_latex = ContinuedFraction(value, max_depth=form.depth, numerators=form.numerators).to_latex()
+        return latex_to_pixmap(f'${fraction_latex}$', font_size=12)
 
     def evaluate_expression(self, expression):
         return eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
@@ -55,7 +55,7 @@ class MainApp(QApplication):
 
 if __name__ == '__main__':
     sys.setrecursionlimit(5000)  # TODO: What
-    decimal.getcontext().prec = 100
+    decimal.getcontext().prec = 200
 
     app = MainApp(sys.argv)
     sys.exit(app.exec_())
