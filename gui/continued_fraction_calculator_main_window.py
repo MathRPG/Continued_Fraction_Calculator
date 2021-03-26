@@ -6,7 +6,7 @@ from continued_fraction_calculator_request_form import ContinuedFractionCalculat
 from gui.ui_continued_fraction_calculator_main_window import Ui_ContinuedFractionCalculatorMainWindow
 
 
-class ContinuedFractionCalculatorWindow(QtWidgets.QWidget, Ui_ContinuedFractionCalculatorMainWindow):
+class ContinuedFractionCalculatorMainWindow(QtWidgets.QWidget, Ui_ContinuedFractionCalculatorMainWindow):
     submitted = QtCore.pyqtSignal(ContinuedFractionCalculatorRequestForm)
 
     DEPTH_DEFAULT_MIN = 0

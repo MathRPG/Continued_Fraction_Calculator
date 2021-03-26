@@ -58,6 +58,7 @@ class Ui_ContinuedFractionCalculatorMainWindow(object):
         self.horizontalLayout_2.addWidget(self.depth_slider)
         self.depth_spin_box = QtWidgets.QSpinBox(ContinuedFractionCalculatorMainWindow)
         self.depth_spin_box.setMaximum(40)
+        self.depth_spin_box.setProperty("value", 5)
         self.depth_spin_box.setObjectName("depth_spin_box")
         self.horizontalLayout_2.addWidget(self.depth_spin_box)
         self.formLayout.setLayout(1, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout_2)
