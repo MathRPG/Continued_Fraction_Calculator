@@ -3,15 +3,17 @@ import math
 import sys
 from decimal import Decimal
 
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
-from gui.simple_continued_fraction_calculator_window import SimpleContinuedFractionCalculatorWindow
+from continued_fraction_calculator_form import ContinuedFractionCalculatorForm
+from gui.continued_fraction_calculator_window import ContinuedFractionCalculatorWindow
 from simple_continuous_fraction import get_simple_continued_fraction_latex_from_value
 from utils.latex_utils import latex_to_pixmap
 
 
 class MainApp(QApplication):
-    """Docstring"""  # TODO: MainApp Docstring
+    # TODO: Better errors, extract evaluation step to its own module
 
     EVALUATION_SYMBOL_LIST = {
         'pi': Decimal(
@@ -27,35 +29,28 @@ class MainApp(QApplication):
 
     def __init__(self, argv):
         super().__init__(argv)
-        self.main_widget = SimpleContinuedFractionCalculatorWindow()
-        self.main_widget.submitted.connect(self.process_form_inputs)
+        self.main_window = ContinuedFractionCalculatorWindow()
+        self.main_window.submitted.connect(self.process_form)
 
     def exec_(self) -> int:
-        self.main_widget.show()
+        self.main_window.show()
         return super().exec_()
 
-    def process_form_inputs(self, expression, depth):
+    @QtCore.pyqtSlot(ContinuedFractionCalculatorForm)
+    def process_form(self, form: ContinuedFractionCalculatorForm):
         try:
-            pixmap = self.get_fraction_pixmap_from_expression_with_depth(expression, depth)
-            self.main_widget.display_result_pixmap(pixmap)
+            result_pixmap = self.form_to_result_pixmap(form)
+            self.main_window.display_result_pixmap(result_pixmap)
         except Exception as e:
-            self.main_widget.process_exception(e)
+            self.main_window.process_exception(e)
 
-    def get_fraction_pixmap_from_expression_with_depth(self, expression, depth):
-        value = self.evaluate_expression(expression)
-        fraction_latex = get_simple_continued_fraction_latex_from_value(value, depth=depth)
+    def form_to_result_pixmap(self, form):
+        value = self.evaluate_expression(form.expression)
+        fraction_latex = get_simple_continued_fraction_latex_from_value(value, depth=form.depth)
         return latex_to_pixmap(fraction_latex, font_size=12)
 
     def evaluate_expression(self, expression):
-        # TODO: Better error names/strings
-        try:
-            return eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
-        except NameError:
-            raise NameError("Unrecognized Names")
-        except SyntaxError:
-            raise SyntaxError("Invalid Syntax")
-        except Exception as e:
-            raise e
+        return eval(expression, {}, self.EVALUATION_SYMBOL_LIST)
 
 
 if __name__ == '__main__':
