@@ -3,6 +3,7 @@ from decimal import Decimal
 
 
 class ExpressionEvaluator:
+    # TODO: Maybe split symbol list between values and functions?
     DEFAULT_SYMBOL_LIST = {
         'pi': Decimal(
             '3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679'),

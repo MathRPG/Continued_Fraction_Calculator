@@ -1,5 +1,3 @@
-from itertools import chain, cycle, repeat
-
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
@@ -27,27 +25,12 @@ class ContinuedFractionCalculatorMainWindow(QtWidgets.QWidget, Ui_ContinuedFract
     def submit_input(self):
         expression = self.expression_line_edit.text()
         depth = self.depth_slider.value()
-        numerators = self.get_numerators()
-        self.submitted.emit(ContinuedFractionCalculatorRequestForm(expression, depth, numerators))
+        has_custom_numerators = self.numerators_customized_radio_button.isChecked()
+        custom_numerator_expression = has_custom_numerators and (
+            self.numerators_sequence_line_edit.text(), self.numerators_cycle_line_edit.text()) or None
 
-    def get_numerators(self):
-        # TODO: After making evaluation class, use it
-        # TODO: Actually, send raw text and process it later
-        if self.numerators_customized_radio_button.isChecked():
-
-            if (tokens := self.numerators_cycle_line_edit.text().strip().split(',')) != ['']:
-                sequence = map(int, tokens)
-            else:
-                sequence = iter([])
-
-            if self.numerators_cycle_line_edit:
-                _cycle = map(int, self.numerators_cycle_line_edit.text().split(','))
-            else:
-                _cycle = iter([])
-
-            return chain(sequence, cycle(_cycle))
-        else:
-            return repeat(1)
+        self.submitted.emit(
+            ContinuedFractionCalculatorRequestForm(expression, depth, custom_numerator_expression))
 
     @QtCore.pyqtSlot(QtGui.QPixmap)
     def display_result_pixmap(self, pixmap):

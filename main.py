@@ -33,7 +33,8 @@ class MainApp(QApplication):
     def process_form(self, form: ContinuedFractionCalculatorRequestForm):
         try:
             value = self.expression_evaluator.eval_(form.expression)
-            fraction_latex = ContinuedFraction(value, max_depth=form.depth, numerators=form.numerators).to_latex()
+            numerators = form.make_numerator_iterator()
+            fraction_latex = ContinuedFraction(value, max_depth=form.depth, numerators=numerators).to_latex()
             result_pixmap = latex_to_pixmap(f'${fraction_latex}$', font_size=12)
             self.main_window.display_result_pixmap(result_pixmap)
         except Exception as e:
