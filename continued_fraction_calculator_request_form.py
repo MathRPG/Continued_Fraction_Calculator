@@ -16,7 +16,10 @@ class ContinuedFractionCalculatorRequestForm:
     def make_numerator_iterator(self):
         if self.custom_numerator_expression is None:  # Simple continued fraction
             return itertools.cycle({1})
-        # TODO: One box can be empty at a time, but not both
-        numerator_sequence = map(int, self.custom_numerator_expression[0].split(','))
-        numerator_cycle = map(int, self.custom_numerator_expression[1].split(','))
+        numerator_sequence = self.parse_numerators_from_comma_separated_values(self.custom_numerator_expression[0])
+        numerator_cycle = self.parse_numerators_from_comma_separated_values(self.custom_numerator_expression[1])
         return itertools.chain(numerator_sequence, itertools.cycle(numerator_cycle))
+
+    @staticmethod
+    def parse_numerators_from_comma_separated_values(text: str):
+        return text and list(map(int, text.split(','))) or []
