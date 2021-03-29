@@ -22,4 +22,4 @@ class SymbolConfigurationWindow(QtWidgets.QWidget, Ui_SymbolConfigurationWindow)
         for i, (symbol, value) in enumerate(symbol_dict.items()):
             print(f'[{i}] Token {symbol} is binded to expression {value}')
             self.symbol_table_widget.setItem(i, 0, QTableWidgetItem(symbol))
-            self.symbol_table_widget.setItem(i, 1, QTableWidgetItem(str(value)))
+            self.symbol_table_widget.setItem(i, 1, QTableWidgetItem(repr(value)))
