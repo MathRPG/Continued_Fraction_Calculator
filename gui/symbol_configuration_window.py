@@ -20,6 +20,6 @@ class SymbolConfigurationWindow(QtWidgets.QWidget, Ui_SymbolConfigurationWindow)
         self.symbol_table_widget.setRowCount(len(symbol_dict))
 
         for i, (symbol, value) in enumerate(symbol_dict.items()):
-            print(f'[{i}] Token {symbol} is binded to expression {value}')
+            print(f'[{i}] Token {symbol} is binded to expression {repr(value)}')
             self.symbol_table_widget.setItem(i, 0, QTableWidgetItem(symbol))
             self.symbol_table_widget.setItem(i, 1, QTableWidgetItem(repr(value)))

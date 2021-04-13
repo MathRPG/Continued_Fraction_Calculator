@@ -22,4 +22,4 @@ class ContinuedFractionCalculatorRequestForm:
 
     @staticmethod
     def parse_numerators_from_comma_separated_values(text: str):
-        return text and list(map(int, text.split(','))) or []
+        return text and eval(f'[{text}]') or []
