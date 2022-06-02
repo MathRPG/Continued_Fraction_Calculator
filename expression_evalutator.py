@@ -19,5 +19,5 @@ class ExpressionEvaluator:
     def __init__(self, symbol_list=None):
         self.symbol_dict = symbol_list or ExpressionEvaluator.DEFAULT_SYMBOL_LIST
 
-    def eval_(self, expr):
+    def eval_expr(self, expr):
         return eval(expr, {}, self.symbol_dict)

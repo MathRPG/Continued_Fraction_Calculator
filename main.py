@@ -5,9 +5,9 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication
 
 from continued_fraction.continued_fraction import ContinuedFraction
-from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm
+from continued_fraction_calculator_request_form import ContinuedFractionCalculatorRequestForm as Form
 from expression_evalutator import ExpressionEvaluator
-from gui.continued_fraction_calculator_main_window import ContinuedFractionCalculatorMainWindow
+from gui.continued_fraction_calculator_main_window import ContinuedFractionCalculatorMainWindow as MainWindow
 from gui.symbol_configuration_window import SymbolConfigurationWindow
 from utils.latex_utils import latex_to_pixmap
 
@@ -19,7 +19,7 @@ class MainApp(QApplication):
 
     def __init__(self, argv):
         super().__init__(argv)
-        self.main_window = ContinuedFractionCalculatorMainWindow()
+        self.main_window = MainWindow()
         self.main_window.submitted.connect(self.process_form)
         self.expression_evaluator = ExpressionEvaluator()
         self.symbol_window = SymbolConfigurationWindow()
@@ -27,13 +27,13 @@ class MainApp(QApplication):
 
     def exec_(self) -> int:
         self.main_window.show()
-        self.symbol_window.show()
+        self.symbol_window.show()  # TODO: Remove
         return super().exec_()
 
-    @QtCore.pyqtSlot(ContinuedFractionCalculatorRequestForm)
-    def process_form(self, form: ContinuedFractionCalculatorRequestForm):
+    @QtCore.pyqtSlot(Form)
+    def process_form(self, form: Form):
         try:
-            value = self.expression_evaluator.eval_(form.expression)
+            value = self.expression_evaluator.eval_expr(form.expression)
             numerators = form.make_numerator_iterator()
             fraction_latex = ContinuedFraction(value, max_depth=form.depth, numerators=numerators).to_latex()
             result_pixmap = latex_to_pixmap(f'${fraction_latex}$', font_size=12)
