@@ -15,8 +15,16 @@ class ExpressionEvaluator:
         'Decimal': Decimal,
     }
 
+    class EvaluationError(Exception):
+        pass
+
     def __init__(self, symbol_list=None):
-        self.symbol_dict = symbol_list or ExpressionEvaluator.DEFAULT_SYMBOL_LIST
+        self.symbol_dict = (symbol_list or ExpressionEvaluator.DEFAULT_SYMBOL_LIST).copy()
 
     def eval_expr(self, expr):
-        return eval(expr, {}, self.symbol_dict)
+        try:
+            return eval(expr, {}, self.symbol_dict)
+        except SyntaxError:
+            raise self.EvaluationError("Invalid Expression Syntax")
+        except NameError:
+            raise self.EvaluationError("Unrecognized Tokens in Expression")

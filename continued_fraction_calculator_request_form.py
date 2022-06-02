@@ -8,6 +8,7 @@ class ContinuedFractionCalculatorRequestForm:
     expression: str
     depth: int
     custom_numerator_expression: Optional[tuple[str, str]]
+    latex_style: str
 
     def make_numerator_iterator(self):
         if self.custom_numerator_expression is None:  # Simple continued fraction

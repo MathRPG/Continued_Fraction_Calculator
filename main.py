@@ -16,12 +16,15 @@ class MainApp(QApplication):
 
     def __init__(self, argv):
         super().__init__(argv)
-        self.main_window = MainWindow()
-        self.main_window.submitted.connect(self.process_form)
+
+        # Initialize and connect symbol window
         self.expression_evaluator = ExpressionEvaluator()
         self.symbol_window = SymbolConfigurationWindow()
-        self.symbol_window.display_symbol_dict(self.expression_evaluator.symbol_dict)
+        self.symbol_window.display_symbol_dict(self.expression_evaluator.symbol_dict)  # TODO: This is debug
 
+        # Initialize and connect main window
+        self.main_window = MainWindow()
+        self.main_window.submitted.connect(self.process_form)
         self.main_window.expression_configure_tool_button.clicked.connect(self.symbol_window.show)
 
     def exec_(self) -> int:
@@ -33,7 +36,10 @@ class MainApp(QApplication):
         try:
             value = self.expression_evaluator.eval_expr(form.expression)
             numerators = form.make_numerator_iterator()
-            fraction_latex = ContinuedFraction(value, max_depth=form.depth, numerators=numerators).to_latex()
+            cf = ContinuedFraction(value, max_depth=form.depth, numerators=numerators)
+            fraction_latex = cf.to_latex(
+                ContinuedFraction.LatexStyle(form.latex_style)
+            )
             result_pixmap = latex_to_pixmap(f'${fraction_latex}$', font_size=12)
             self.main_window.display_result_pixmap(result_pixmap)
         except Exception as e:

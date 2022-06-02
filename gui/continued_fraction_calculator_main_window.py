@@ -25,12 +25,18 @@ class ContinuedFractionCalculatorMainWindow(QtWidgets.QWidget, Ui_ContinuedFract
     def submit_input(self):
         expression = self.expression_line_edit.text()
         depth = self.depth_slider.value()
-        has_custom_numerators = self.numerators_customized_radio_button.isChecked()
-        custom_numerator_expression = has_custom_numerators and (
-            self.numerators_sequence_line_edit.text(), self.numerators_cycle_line_edit.text()) or None
+        numerators = self.get_numerator_input()
+        latex_style = self.display_format_combo_box.currentText()
 
         self.submitted.emit(
-            ContinuedFractionCalculatorRequestForm(expression, depth, custom_numerator_expression))
+            ContinuedFractionCalculatorRequestForm(
+                expression, depth, numerators, latex_style))
+
+    def get_numerator_input(self):
+        has_custom_numerators = self.numerators_customized_radio_button.isChecked()
+        if not has_custom_numerators:
+            return None
+        return self.numerators_sequence_line_edit.text(), self.numerators_cycle_line_edit.text()
 
     @QtCore.pyqtSlot(QtGui.QPixmap)
     def display_result_pixmap(self, pixmap):
