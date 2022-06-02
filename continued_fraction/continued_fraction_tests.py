@@ -30,7 +30,7 @@ class ContinuedFractionTestCase(unittest.TestCase):
 
     def test_custom_numerators(self):
         self.assertEqual(r'1 + \dfrac{2}{3}',
-                         ContinuedFraction(1 + 2 / 3, numerators=iter([2])).to_latex())
+                         ContinuedFraction(1 + 2 / 3, numerators=iter({2})).to_latex())
 
 
 if __name__ == '__main__':
