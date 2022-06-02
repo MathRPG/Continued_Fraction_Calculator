@@ -15,6 +15,7 @@ from utils.latex_utils import latex_to_pixmap
 class MainApp(QApplication):
 
     # TODO: Better errors, extract evaluation step to its own module
+    # TODO: GUi in its own thread
 
     def __init__(self, argv):
         super().__init__(argv)
