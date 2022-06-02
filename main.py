@@ -22,9 +22,10 @@ class MainApp(QApplication):
         self.symbol_window = SymbolConfigurationWindow()
         self.symbol_window.display_symbol_dict(self.expression_evaluator.symbol_dict)
 
+        self.main_window.expression_configure_tool_button.clicked.connect(self.symbol_window.show)
+
     def exec_(self) -> int:
         self.main_window.show()
-        self.symbol_window.show()  # TODO: Remove
         return super().exec_()
 
     @QtCore.pyqtSlot(Form)
