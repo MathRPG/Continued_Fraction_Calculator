@@ -6,23 +6,23 @@ class ContinuedFraction:
     # TODO: Requires more testing
 
     def __init__(self, value: float, max_depth: int = 5, numerators=repeat(1)):
-        self._as, self._bs = self.convert_value_to_continued_fraction_as_array(value, max_depth, numerators)
+        self.av, self.bv = self.convert_value_to_continued_fraction_as_array(value, max_depth, numerators)
 
     @staticmethod
     def convert_value_to_continued_fraction_as_array(value, max_depth, numerators):
-        _as = []
-        _bs = []
+        av = []
+        bv = []
         current_depth = 0
         while True:
             a, frac = ContinuedFraction.split_integer(value)
-            _as.append(a)
+            av.append(a)
             if math.isclose(frac, 0) or current_depth == max_depth:
                 break
             b = next(numerators)
             value = b / frac
-            _bs.append(b)
+            bv.append(b)
             current_depth += 1
-        return _as, _bs
+        return av, bv
 
     @staticmethod
     def split_integer(value):
@@ -34,9 +34,11 @@ class ContinuedFraction:
         return integer_part, value - integer_part
 
     def to_latex(self) -> str:
-        latex = str(self._as[-1])
+        ai, bi = reversed(self.av), reversed(self.bv)
 
-        for a, b in zip(self._as[-2::-1], self._bs[::-1]):
+        latex = str(next(ai))
+
+        for a, b in zip(ai, bi):
             latex = r'%d + \dfrac{%d}{%s}' % (a, b, latex)
 
         return latex
