@@ -3,7 +3,6 @@ from itertools import repeat
 
 
 class ContinuedFraction:
-    # TODO: Requires more testing
 
     def __init__(self, value: float, max_depth: int = 5, numerators=repeat(1)):
         self.av, self.bv = self.convert_value_to_continued_fraction_as_array(value, max_depth, numerators)

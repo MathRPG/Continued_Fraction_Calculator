@@ -39,5 +39,4 @@ class ContinuedFractionCalculatorMainWindow(QtWidgets.QWidget, Ui_ContinuedFract
 
     @QtCore.pyqtSlot(Exception)
     def process_exception(self, exception):
-        # TODO: Better Exception handling
         QtWidgets.QMessageBox.critical(self, type(exception).__name__, str(exception))
