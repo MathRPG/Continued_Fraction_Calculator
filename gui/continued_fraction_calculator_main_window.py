@@ -32,7 +32,7 @@ class ContinuedFractionCalculatorMainWindow(QtWidgets.QWidget, Ui_ContinuedFract
             ContinuedFractionCalculatorRequestForm(
                 expression, depth, numerators, latex_style))
 
-    def get_numerator_input(self):
+    def get_numerator_input(self) -> None | tuple[int, int]:
         has_custom_numerators = self.numerators_customized_radio_button.isChecked()
         if not has_custom_numerators:
             return None
