@@ -93,4 +93,4 @@ class ContinuedFraction:
 
 
 if __name__ == '__main__':
-    print(ContinuedFraction(1 + 2 / 3)._to_latex_nested())
+    print(ContinuedFraction(1 + 2 / 3).to_latex(ContinuedFraction.LatexStyle.NESTED))
